@@ -7,7 +7,7 @@ function loadHeader() {
 
       // 로고 클릭 시 홈으로 이동
       document.getElementById('logoLink').addEventListener('click', () => {
-        window.location.href = 'index.html';
+        window.location.href = 'https://jbjb.r-e.kr';
       });
 
       // 버튼 이벤트 리스너 추가
