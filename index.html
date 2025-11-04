@@ -4,10 +4,130 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>URL 단축기 - 정빈777</title>
+  <link rel="icon" type="image/svg+xml" href='data:image/svg+xml;utf8,
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 2000 2000">
+  <defs>
+    <linearGradient id="linearGradient1" x1="1576.7" y1="1817" x2="423.3" y2="183" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="%233478f6" />
+      <stop offset="1" stop-color="%2353b6f9" />
+    </linearGradient>
+    <filter id="filter1" x="0" y="0" width="2000" height="2000" color-interpolation-filters="sRGB">
+      <feFlood flood-color="%23000000" flood-opacity="0.52" />
+      <feComposite in2="SourceGraphic" operator="out" />
+      <feGaussianBlur stdDeviation="43" />
+      <feOffset dx="35" dy="24" />
+      <feComposite in2="SourceGraphic" operator="atop" />
+    </filter>
+  </defs>
+  <path fill="url(%23linearGradient1)" d="M 2000 1000 C 2000 448 1552 0 1000 0 C 448 0 0 448 0 1000 C 0 1552 448 2000 1000 2000 C 1552 2000 2000 1552 2000 1000 Z"/>
+  <path fill="%23fff" filter="url(%23filter1)" d="M 1137 506 C 1252 449 1369 497 1427 625 L 1459 696 C 1484 752 1488 821 1471 878 L 1472 877 C 1535 891 1581 939 1608 997 L 1632 1052 C 1698 1199 1657 1324 1544 1381 L 1175 1565 L 972 1114 C 1002 1241 946 1377 834 1433 L 776 1462 C 654 1523 518 1467 449 1343 L 596 1269 C 625 1309 663 1331 708 1308 L 758 1283 C 813 1256 830 1185 802 1124 L 525 509 L 672 435 L 784 683 L 1137 506 Z M 1444 1232 C 1488 1210 1504 1149 1480 1095 L 1476 1085 C 1452 1033 1397 1007 1353 1029 L 1151 1130 L 1242 1333 L 1444 1232 Z M 1184 679 L 991 775 L 1084 981 L 1276 885 C 1319 864 1336 802 1312 749 L 1306 736 C 1283 684 1226 658 1184 679 Z"/>
+</svg>' />
+  
+  <link rel="stylesheet" href="https://jbjb.r-e.kr/header.css">
+  
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #121212;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    .content-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 600px;
+      width: 100%;
+      margin: 60px auto;
+      text-align: center;
+      background: #1e1e1e;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.6);
+    }
+    
+    h1 {
+      color: #ffffff;
+      margin-bottom: 30px;
+    }
+    
+    #urlInput {
+      width: 80%;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      background: #2c2c2c;
+      color: #fff;
+      font-size: 16px;
+      outline: none;
+    }
+    
+    #shortenBtn {
+      padding: 12px 24px;
+      margin-left: 10px;
+      border: none;
+      background: #3663FF;
+      color: white;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    
+    #shortenBtn:hover {
+      transform: translateY(-8px) scale(1.05);
+    }
+    
+    #shortenBtn:active {
+      background: #2952CC;
+    }
+    
+    #result {
+      margin-top: 30px;
+      font-size: 1.1em;
+      color: #fff;
+    }
+    
+    #result a {
+      color: #00bfff;
+      text-decoration: none;
+    }
+    
+    #result a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <!-- 헤더 컨테이너 -->
+  <div id="header-container"></div>
+
+  <div class="content-wrapper">
+    <div class="container" id="mainContainer" style="display:none;">
+      <h1>🔗 URL 단축기</h1>
+      <input id="urlInput" type="text" placeholder="단축할 URL 입력 (예: https://naver.com)">
+      <button id="shortenBtn">단축하기</button>
+      <p id="result"></p>
+    </div>
+  </div>
+
+  <!-- 공통 헤더 JavaScript -->
+  <script src="https://jbjb.r-e.kr/header.js"></script>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
-
+    
     const firebaseConfig = {
       apiKey: "AIzaSyB8OHhR0Vjan_nNdCczb5e2bOuDBYYRiIg",
       authDomain: "urlshare-718c1.firebaseapp.com",
@@ -18,68 +138,58 @@
       appId: "1:666729308999:web:a7f6d363e88b1d5ed5a262",
       measurementId: "G-VZH9BNQ3VR"
     };
-
+    
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-
-    const path = window.location.pathname.slice(1); // '/' 제거
-
-    // ✅ 랜덤 문자열 생성 함수
+    const path = window.location.pathname.slice(1);
+    
     function generateCode(length = 6) {
       const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       let result = '';
       for (let i = 0; i < length; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
       return result;
     }
-
+    
     if (path) {
-      // 🔗 단축 URL로 접속했을 때
       const dbRef = ref(db);
       get(child(dbRef, `urls/${path}`))
         .then(snapshot => {
           if (snapshot.exists()) {
             window.location.href = snapshot.val().original;
           } else {
-            document.body.innerHTML = `<h2>❌ 단축 링크를 찾을 수 없습니다.</h2>`;
+            document.querySelector('.content-wrapper').innerHTML = `
+              <div class="container" style="display:block;">
+                <h2>❌ 단축 링크를 찾을 수 없습니다.</h2>
+              </div>
+            `;
           }
         })
         .catch(err => {
-          document.body.innerHTML = `<h2>⚠️ 오류 발생: ${err.message}</h2>`;
+          document.querySelector('.content-wrapper').innerHTML = `
+            <div class="container" style="display:block;">
+              <h2>⚠️ 오류 발생: ${err.message}</h2>
+            </div>
+          `;
         });
     } else {
-      // 🏠 메인 페이지
-      document.addEventListener("DOMContentLoaded", () => {
-        document.body.innerHTML = `
-          <div style="max-width:600px;margin:60px auto;text-align:center;font-family:sans-serif;">
-            <h1>🔗 URL 단축기</h1>
-            <input id="urlInput" type="text" placeholder="단축할 URL 입력 (예: https://naver.com)"
-              style="width:80%;padding:10px;border-radius:8px;border:1px solid #ccc;">
-            <button id="shortenBtn" 
-              style="padding:10px 20px;margin-left:10px;border:none;background:#0078ff;color:white;border-radius:8px;cursor:pointer;">단축하기</button>
-            <p id="result" style="margin-top:20px;font-size:1.1em;"></p>
-          </div>
-        `;
-
-        const input = document.getElementById("urlInput");
-        const btn = document.getElementById("shortenBtn");
-        const result = document.getElementById("result");
-
-        btn.addEventListener("click", async () => {
-          const longUrl = input.value.trim();
-          if (!longUrl.startsWith("http://") && !longUrl.startsWith("https://")) {
-            alert("URL은 반드시 http:// 또는 https:// 로 시작해야 합니다!");
-            return;
-          }
-
-          const code = generateCode();
-          await set(ref(db, `urls/${code}`), { original: longUrl });
-
-          const shortUrl = `https://url.jbjb.r-e.kr/${code}`;
-          result.innerHTML = `✅ 단축 URL: <a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
-        });
+      document.getElementById('mainContainer').style.display = 'block';
+      
+      const input = document.getElementById("urlInput");
+      const btn = document.getElementById("shortenBtn");
+      const result = document.getElementById("result");
+      
+      btn.addEventListener("click", async () => {
+        const longUrl = input.value.trim();
+        if (!longUrl.startsWith("http://") && !longUrl.startsWith("https://")) {
+          alert("URL은 반드시 http:// 또는 https:// 로 시작해야 합니다!");
+          return;
+        }
+        const code = generateCode();
+        await set(ref(db, `urls/${code}`), { original: longUrl });
+        const shortUrl = `https://url.jbjb.r-e.kr/${code}`;
+        result.innerHTML = `✅ 단축 URL: <a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
       });
     }
   </script>
-</head>
-<body></body>
+</body>
 </html>
