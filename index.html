@@ -5,11 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>URL 단축기 - 정빈777</title>
   <script type="module">
-    // Firebase SDK 불러오기
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
- 
     const firebaseConfig = {
       apiKey: "AIzaSyB8OHhR0Vjan_nNdCczb5e2bOuDBYYRiIg",
       authDomain: "urlshare-718c1.firebaseapp.com",
@@ -21,34 +19,40 @@
       measurementId: "G-VZH9BNQ3VR"
     };
 
-    // Firebase 초기화
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // 현재 경로 감지
     const path = window.location.pathname.slice(1); // '/' 제거
 
+    // ✅ 랜덤 문자열 생성 함수
+    function generateCode(length = 6) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < length; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
+      return result;
+    }
+
     if (path) {
-      // 슬래시 뒤에 뭔가 있다면 (즉, 단축 주소로 접속한 경우)
+      // 🔗 단축 URL로 접속했을 때
       const dbRef = ref(db);
-      get(child(dbRef, `urls/${encodeURIComponent(path)}`)).then((snapshot) => {
-        if (snapshot.exists()) {
-          const original = snapshot.val().original;
-          window.location.href = original; // 원래 주소로 리디렉트
-        } else {
-          document.body.innerHTML = `<h2>❌ 단축 링크를 찾을 수 없습니다.</h2>`;
-        }
-      }).catch((error) => {
-        console.error(error);
-        document.body.innerHTML = `<h2>⚠️ 오류 발생: ${error.message}</h2>`;
-      });
+      get(child(dbRef, `urls/${path}`))
+        .then(snapshot => {
+          if (snapshot.exists()) {
+            window.location.href = snapshot.val().original;
+          } else {
+            document.body.innerHTML = `<h2>❌ 단축 링크를 찾을 수 없습니다.</h2>`;
+          }
+        })
+        .catch(err => {
+          document.body.innerHTML = `<h2>⚠️ 오류 발생: ${err.message}</h2>`;
+        });
     } else {
-      // 메인 페이지 UI 표시
+      // 🏠 메인 페이지
       document.addEventListener("DOMContentLoaded", () => {
         document.body.innerHTML = `
-          <div style="max-width:600px;margin:50px auto;text-align:center;font-family:sans-serif;">
+          <div style="max-width:600px;margin:60px auto;text-align:center;font-family:sans-serif;">
             <h1>🔗 URL 단축기</h1>
-            <input id="urlInput" type="text" placeholder="단축할 URL 입력" 
+            <input id="urlInput" type="text" placeholder="단축할 URL 입력 (예: https://naver.com)"
               style="width:80%;padding:10px;border-radius:8px;border:1px solid #ccc;">
             <button id="shortenBtn" 
               style="padding:10px 20px;margin-left:10px;border:none;background:#0078ff;color:white;border-radius:8px;cursor:pointer;">단축하기</button>
@@ -62,24 +66,20 @@
 
         btn.addEventListener("click", async () => {
           const longUrl = input.value.trim();
-          if (!longUrl) {
-            alert("URL을 입력해주세요!");
+          if (!longUrl.startsWith("http://") && !longUrl.startsWith("https://")) {
+            alert("URL은 반드시 http:// 또는 https:// 로 시작해야 합니다!");
             return;
           }
 
-          // 경로에 사용할 키 (긴 URL도 그대로 쓸 수 있도록 인코딩)
-          const key = encodeURIComponent(longUrl);
+          const code = generateCode();
+          await set(ref(db, `urls/${code}`), { original: longUrl });
 
-          // Firebase에 저장
-          await set(ref(db, `urls/${key}`), { original: longUrl });
-
-          const shortUrl = `https://url.jbjb.r-e.kr/${longUrl}`;
+          const shortUrl = `https://url.jbjb.r-e.kr/${code}`;
           result.innerHTML = `✅ 단축 URL: <a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
         });
       });
     }
   </script>
 </head>
-<body>
-</body>
+<body></body>
 </html>
