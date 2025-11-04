@@ -16,7 +16,7 @@ function loadHeader() {
       });
 
       document.getElementById('openLinkBtn2').addEventListener('click', () => {
-        window.location.href = 'gifsvg.html';
+        window.location.href = 'https://jbjb.r-e.kr/gifsvg.html';
       });
 
       document.getElementById('openLinkBtn3').addEventListener('click', () => {
@@ -24,11 +24,11 @@ function loadHeader() {
       });
 
       document.getElementById('imgBtn').addEventListener('click', () => {
-        window.location.href = 'img.html';
+        window.location.href = 'https://jbjb.r-e.kr/img.html';
       });
 
       document.getElementById('chatBtn').addEventListener('click', () => {
-        window.location.href = 'chat.html';
+        window.location.href = 'https://jbjb.r-e.kr/chat.html';
       });
 
       document.getElementById('urlBtn').addEventListener('click', () => {
