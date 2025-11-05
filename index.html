@@ -26,18 +26,18 @@
   <link rel="stylesheet" href="header.css">
   
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      margin: 0;
-      padding: 0;
       font-family: 'Segoe UI', sans-serif;
       background: #121212;
       color: #fff;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      overflow-x: hidden;
     }
     
-    .content-wrapper {
+    main {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -50,61 +50,118 @@
       width: 100%;
       margin: 60px auto;
       text-align: center;
-      background: #1e1e1e;
-      padding: 40px;
+      background: #1a1a1a;
+      padding: 40px 20px;
       border-radius: 16px;
       box-shadow: 0 0 30px rgba(0,0,0,0.6);
     }
     
-    h1 {
-      color: #ffffff;
+    h2 {
+      color: #3663FF;
       margin-bottom: 30px;
+      font-size: 28px;
     }
+
+    /* 페이지 섹션 */
+    .page { display: none; }
+    .page.active { display: block; }
     
-    #urlInput {
-      width: 80%;
-      padding: 12px;
+    /* 페이지 1: 입력 */
+    #inputSection #urlInput {
+      width: 100%;
+      padding: 12px 16px;
       border-radius: 12px;
       border: none;
       background: #2c2c2c;
       color: #fff;
       font-size: 16px;
       outline: none;
+      margin-bottom: 20px;
     }
     
-    #shortenBtn {
-      padding: 12px 24px;
-      margin-left: 10px;
-      border: none;
+    .shorten-button {
       background: #3663FF;
-      color: white;
+      color: #fff;
+      padding: 14px 28px;
+      margin: 10px 0;
+      border: none;
       border-radius: 30px;
       cursor: pointer;
       font-size: 16px;
       transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      width: 100%;
     }
     
-    #shortenBtn:hover {
+    .shorten-button:hover {
       transform: translateY(-8px) scale(1.05);
     }
     
-    #shortenBtn:active {
+    .shorten-button:active {
       background: #2952CC;
     }
-    
-    #result {
-      margin-top: 30px;
-      font-size: 1.1em;
+
+    /* 페이지 2: 로딩 */
+    #loadingSection { text-align: center; padding: 40px 0; }
+    .spinner {
+      width: 70px;
+      height: 70px;
+      border: 5px solid rgba(54,99,255,0.2);
+      border-top-color: #3663FF;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 30px auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loadingSection p { color: #aaa; font-size: 18px; margin-top: 20px; }
+
+    /* 페이지 3: 완료 */
+    #completeSection { text-align: center; padding: 20px 0; }
+    .check-icon { width: 90px; height: 90px; margin: 20px auto 30px; }
+    .check-icon svg { width: 100%; height: 100%; }
+    #completeSection > p { 
+      color: #3663FF; 
+      font-size: 22px; 
+      font-weight: bold; 
+      margin: 20px 0 30px; 
+    }
+
+    /* 링크 복사용 UI */
+    .link-container { 
+      display: flex; 
+      gap: 10px; 
+      align-items: center; 
+      margin-bottom: 15px; 
+    }
+    #linkDisplay {
+      flex: 1;
+      border: 2px solid #555;
+      border-radius: 8px;
+      padding: 12px 16px;
+      background: #2a2a2a;
       color: #fff;
+      font-size: 14px;
+      overflow-x: auto;
     }
-    
-    #result a {
-      color: #00bfff;
-      text-decoration: none;
+    #copyBtn {
+      min-width: 70px;
+      height: 45px;
+      padding: 0 20px;
+      border-radius: 30px;
+      font-size: 14px;
+      background: #3663FF;
+      color: #fff;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
-    
-    #result a:hover {
-      text-decoration: underline;
+    #copyBtn:hover { transform: translateY(-5px) scale(1.05); }
+
+    @media (max-width: 800px) {
+      .container {
+        margin: 30px auto;
+        padding: 30px 15px;
+      }
+      h2 { font-size: 24px; }
     }
   </style>
 </head>
@@ -112,14 +169,44 @@
   <!-- 헤더 컨테이너 -->
   <div id="header-container"></div>
 
-  <div class="content-wrapper">
-    <div class="container" id="mainContainer" style="display:none;">
-      <h1>🔗 URL 단축기</h1>
-      <input id="urlInput" type="text" placeholder="단축할 URL 입력 (예: https://naver.com)">
-      <button id="shortenBtn">단축하기</button>
-      <p id="result"></p>
+  <main>
+    <div class="container">
+      <!-- 페이지 1: 입력 -->
+      <div id="inputSection" class="page active">
+        <h2>🔗 URL 단축기</h2>
+        <input id="urlInput" type="text" placeholder="단축할 URL 입력 (예: https://naver.com)">
+        <button class="shorten-button" id="shortenBtn">단축하기</button>
+      </div>
+
+      <!-- 페이지 2: 로딩 -->
+      <div id="loadingSection" class="page">
+        <h2>단축 중...</h2>
+        <div class="spinner"></div>
+        <p>잠시만 기다려 주세요</p>
+      </div>
+
+      <!-- 페이지 3: 완료 -->
+      <div id="completeSection" class="page">
+        <h2>단축 완료</h2>
+        <div class="check-icon">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="45" fill="none" stroke="#3663FF" stroke-width="4"/>
+            <path d="M 30 50 L 45 65 L 70 35" fill="none" stroke="#3663FF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+              <animate attributeName="stroke-dasharray" from="0 100" to="100 100" dur="0.5s" fill="freeze"/>
+              <animate attributeName="stroke-dashoffset" from="100" to="0" dur="0.5s" fill="freeze"/>
+            </path>
+          </svg>
+        </div>
+        <p>단축이 완료되었습니다</p>
+        <div class="link-container">
+          <input id="linkDisplay" type="text" readonly>
+          <button id="copyBtn">복사</button>
+        </div>
+        <button class="shorten-button" id="openLinkBtn">링크 열기</button>
+        <button class="shorten-button" id="newShortenBtn">새로 단축</button>
+      </div>
     </div>
-  </div>
+  </main>
 
   <!-- 공통 헤더 JavaScript -->
   <script src="header.js"></script>
@@ -149,7 +236,14 @@
       for (let i = 0; i < length; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
       return result;
     }
+
+    // 페이지 전환 함수
+    function showPage(pageName) {
+      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+      document.getElementById(pageName + 'Section').classList.add('active');
+    }
     
+    // 리다이렉트 처리
     if (path) {
       const dbRef = ref(db);
       get(child(dbRef, `urls/${path}`))
@@ -157,37 +251,81 @@
           if (snapshot.exists()) {
             window.location.href = snapshot.val().original;
           } else {
-            document.querySelector('.content-wrapper').innerHTML = `
-              <div class="container" style="display:block;">
+            document.querySelector('main').innerHTML = `
+              <div class="container">
                 <h2>❌ 단축 링크를 찾을 수 없습니다.</h2>
               </div>
             `;
           }
         })
         .catch(err => {
-          document.querySelector('.content-wrapper').innerHTML = `
-            <div class="container" style="display:block;">
+          document.querySelector('main').innerHTML = `
+            <div class="container">
               <h2>⚠️ 오류 발생: ${err.message}</h2>
             </div>
           `;
         });
     } else {
-      document.getElementById('mainContainer').style.display = 'block';
-      
+      // 메인 페이지 로직
       const input = document.getElementById("urlInput");
       const btn = document.getElementById("shortenBtn");
-      const result = document.getElementById("result");
+      const linkDisplay = document.getElementById("linkDisplay");
+      const copyBtn = document.getElementById("copyBtn");
+      const openLinkBtn = document.getElementById("openLinkBtn");
+      const newShortenBtn = document.getElementById("newShortenBtn");
       
+      let currentShortUrl = '';
+
       btn.addEventListener("click", async () => {
         const longUrl = input.value.trim();
         if (!longUrl.startsWith("http://") && !longUrl.startsWith("https://")) {
           alert("URL은 반드시 http:// 또는 https:// 로 시작해야 합니다!");
           return;
         }
-        const code = generateCode();
-        await set(ref(db, `urls/${code}`), { original: longUrl });
-        const shortUrl = `https://url.jbjb.r-e.kr/${code}`;
-        result.innerHTML = `✅ 단축 URL: <a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
+
+        // 로딩 페이지로 전환
+        showPage('loading');
+
+        try {
+          const code = generateCode();
+          await set(ref(db, `urls/${code}`), { original: longUrl });
+          const shortUrl = `https://url.jbjb.r-e.kr/${code}`;
+          currentShortUrl = shortUrl;
+          
+          linkDisplay.value = shortUrl;
+
+          // 완료 페이지로 전환
+          showPage('complete');
+        } catch (error) {
+          alert('단축 실패: ' + error.message);
+          showPage('input');
+        }
+      });
+
+      // 복사 버튼
+      copyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(linkDisplay.value).then(() => {
+          const originalText = copyBtn.textContent;
+          copyBtn.textContent = "✔";
+          copyBtn.style.background = "#00cc88";
+          setTimeout(() => {
+            copyBtn.textContent = originalText;
+            copyBtn.style.background = "#3663FF";
+          }, 1500);
+        });
+      });
+
+      // 링크 열기 버튼
+      openLinkBtn.addEventListener('click', () => {
+        window.open(currentShortUrl, '_blank');
+      });
+
+      // 새로 단축 버튼
+      newShortenBtn.addEventListener('click', () => {
+        input.value = '';
+        linkDisplay.value = '';
+        currentShortUrl = '';
+        showPage('input');
       });
     }
   </script>
