@@ -3,59 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>URL Shortener</title>
+<title>Redirecting...</title>
 
 <style>
-body {
-  font-family: sans-serif;
-  background: #111;
-  color: white;
-  padding: 20px;
-}
-
-input {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  background: #222;
-  color: white;
-  border: 1px solid #444;
-  border-radius: 8px;
-}
-
-button {
-  padding: 10px 16px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.result {
-  margin-top: 20px;
-  padding: 15px;
-  background: #222;
-  border-radius: 10px;
-  word-break: break-all;
+body{
+  background:#111;
+  color:white;
+  font-family:sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  margin:0;
 }
 </style>
 </head>
 <body>
 
-<h1>URL Shortener</h1>
-
-<input
-  type="text"
-  id="url"
-  placeholder="https://example.com"
-/>
-
-<button onclick="createShortUrl()">
-단축 URL 생성
-</button>
-
-<div class="result" id="result">
-아직 생성되지 않음
+<div id="text">
+링크 확인중...
 </div>
 
 <script>
@@ -63,52 +29,61 @@ button {
 const API =
   "https://d-log-api.alexeom97.workers.dev/api/posts";
 
-async function createShortUrl() {
+// 현재 주소
+// /ABCDE
+const code =
+  location.pathname.slice(1);
 
-  const url =
-    document.getElementById("url").value;
+async function redirect() {
 
-  if (!url) {
-    alert("URL 입력");
+  // 메인페이지
+  if (!code) {
+    document.getElementById("text").innerHTML =
+      "잘못된 링크";
     return;
   }
 
-  const res = await fetch(API, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Prefer": "return=representation"
-    },
-    body: JSON.stringify({
-      url
-    })
-  });
+  try {
 
-  const data = await res.json();
+    // 전체 게시글 가져오기
+    const res = await fetch(API);
 
-  // Supabase return=representation 결과
-  const item = data[0];
+    const data = await res.json();
 
-  const shortUrl =
-    `https://url.jbjb.r-e.kr/${item.id}`;
+    // id 찾기
+    const item =
+      data.find(v => v.id === code);
 
-  document.getElementById("result").innerHTML = `
-    <p><b>원본 URL:</b></p>
-    <p>${item.url}</p>
+    // 없음
+    if (!item) {
+      document.getElementById("text").innerHTML =
+        "404 링크 없음";
+      return;
+    }
 
-    <p style="margin-top:15px;">
-      <b>단축 URL:</b>
-    </p>
+    let target = item.url;
 
-    <a
-      href="${shortUrl}"
-      target="_blank"
-      style="color:skyblue;"
-    >
-      ${shortUrl}
-    </a>
-  `;
+    // https 자동추가
+    if (
+      !target.startsWith("http://") &&
+      !target.startsWith("https://")
+    ) {
+      target = "https://" + target;
+    }
+
+    // 이동
+    location.href = target;
+
+  } catch(err) {
+
+    document.getElementById("text").innerHTML =
+      "오류 발생";
+
+    console.error(err);
+  }
 }
+
+redirect();
 
 </script>
 
