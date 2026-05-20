@@ -1,332 +1,116 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>㋡꧁정빈777꧂ - 로딩 중</title>
-  <link rel="icon" type="image/svg+xml" href='data:image/svg+xml;utf8,
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 2000 2000">
-  <defs>
-    <linearGradient id="linearGradient1" x1="1576.7" y1="1817" x2="423.3" y2="183" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="%233478f6" />
-      <stop offset="1" stop-color="%2353b6f9" />
-    </linearGradient>
-    <filter id="filter1" x="0" y="0" width="2000" height="2000" color-interpolation-filters="sRGB">
-      <feFlood flood-color="%23000000" flood-opacity="0.52" />
-      <feComposite in2="SourceGraphic" operator="out" />
-      <feGaussianBlur stdDeviation="43" />
-      <feOffset dx="35" dy="24" />
-      <feComposite in2="SourceGraphic" operator="atop" />
-    </filter>
-  </defs>
-  <path fill="url(%23linearGradient1)" d="M 2000 1000 C 2000 448 1552 0 1000 0 C 448 0 0 448 0 1000 C 0 1552 448 2000 1000 2000 C 1552 2000 2000 1552 2000 1000 Z"/>
-  <path fill="%23fff" filter="url(%23filter1)" d="M 1137 506 C 1252 449 1369 497 1427 625 L 1459 696 C 1484 752 1488 821 1471 878 L 1472 877 C 1535 891 1581 939 1608 997 L 1632 1052 C 1698 1199 1657 1324 1544 1381 L 1175 1565 L 972 1114 C 1002 1241 946 1377 834 1433 L 776 1462 C 654 1523 518 1467 449 1343 L 596 1269 C 625 1309 663 1331 708 1308 L 758 1283 C 813 1256 830 1185 802 1124 L 525 509 L 672 435 L 784 683 L 1137 506 Z M 1444 1232 C 1488 1210 1504 1149 1480 1095 L 1476 1085 C 1452 1033 1397 1007 1353 1029 L 1151 1130 L 1242 1333 L 1444 1232 Z M 1184 679 L 991 775 L 1084 981 L 1276 885 C 1319 864 1336 802 1312 749 L 1306 736 C 1283 684 1226 658 1184 679 Z"/>
-</svg>' />
-  
-  <link rel="stylesheet" href="header.css">
-  
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #121212;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-    
-    main {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex: 1;
-      padding: 20px;
-    }
-    
-    .container {
-      max-width: 600px;
-      width: 100%;
-      margin: 60px auto;
-      text-align: center;
-      background: #1a1a1a;
-      padding: 40px 20px;
-      border-radius: 16px;
-      box-shadow: 0 0 30px rgba(0,0,0,0.6);
-    }
-    
-    h2 {
-      color: #3663FF;
-      margin-bottom: 30px;
-      font-size: 28px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>URL Shortener</title>
 
-    /* 페이지 섹션 */
-    .page { display: none; }
-    .page.active { display: block; }
-    
-    /* 페이지 1: 입력 */
-    #inputSection #urlInput {
-      width: 100%;
-      padding: 12px 16px;
-      border-radius: 12px;
-      border: none;
-      background: #2c2c2c;
-      color: #fff;
-      font-size: 16px;
-      outline: none;
-      margin-bottom: 20px;
-    }
-    
-    .shorten-button {
-      background: #3663FF;
-      color: #fff;
-      padding: 14px 28px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      width: 100%;
-    }
-    
-    .shorten-button:hover {
-      transform: translateY(-8px) scale(1.05);
-    }
-    
-    .shorten-button:active {
-      background: #2952CC;
-    }
+<style>
+body {
+  font-family: sans-serif;
+  background: #111;
+  color: white;
+  padding: 20px;
+}
 
-    /* 페이지 2: 로딩 */
-    #loadingSection { text-align: center; padding: 40px 0; }
-    .spinner {
-      width: 70px;
-      height: 70px;
-      border: 5px solid rgba(54,99,255,0.2);
-      border-top-color: #3663FF;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin: 30px auto;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    #loadingSection p { color: #aaa; font-size: 18px; margin-top: 20px; }
+input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: #222;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 8px;
+}
 
-    /* 페이지 3: 완료 */
-    #completeSection { text-align: center; padding: 20px 0; }
-    .check-icon { width: 90px; height: 90px; margin: 20px auto 30px; }
-    .check-icon svg { width: 100%; height: 100%; }
-    #completeSection > p { 
-      color: #3663FF; 
-      font-size: 22px; 
-      font-weight: bold; 
-      margin: 20px 0 30px; 
-    }
+button {
+  padding: 10px 16px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
 
-    /* 링크 복사용 UI */
-    .link-container { 
-      display: flex; 
-      gap: 10px; 
-      align-items: center; 
-      margin-bottom: 15px; 
-    }
-    #linkDisplay {
-      flex: 1;
-      border: 2px solid #555;
-      border-radius: 8px;
-      padding: 12px 16px;
-      background: #2a2a2a;
-      color: #fff;
-      font-size: 14px;
-      overflow-x: auto;
-    }
-    #copyBtn {
-      min-width: 70px;
-      height: 45px;
-      padding: 0 20px;
-      border-radius: 30px;
-      font-size: 14px;
-      background: #3663FF;
-      color: #fff;
-      cursor: pointer;
-      border: none;
-      transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    }
-    #copyBtn:hover { transform: translateY(-5px) scale(1.05); }
-
-    @media (max-width: 800px) {
-      .container {
-        margin: 30px auto;
-        padding: 30px 15px;
-      }
-      h2 { font-size: 24px; }
-    }
-  </style>
+.result {
+  margin-top: 20px;
+  padding: 15px;
+  background: #222;
+  border-radius: 10px;
+  word-break: break-all;
+}
+</style>
 </head>
 <body>
-  <!-- 헤더 컨테이너 -->
-  <div id="header-container"></div>
 
-  <main>
-    <div class="container">
-      <!-- 페이지 1: 입력 -->
-      <div id="inputSection" class="page active">
-        <h2>🔗 단축된 URL 로 이동중</h2>
+<h1>URL Shortener</h1>
 
-      </div>
+<input
+  type="text"
+  id="url"
+  placeholder="https://example.com"
+/>
 
-      <!-- 페이지 2: 로딩 -->
-      <div id="loadingSection" class="page">
-        <h2>단축 중...</h2>
-        <div class="spinner"></div>
-        <p>잠시만 기다려 주세요</p>
-      </div>
+<button onclick="createShortUrl()">
+단축 URL 생성
+</button>
 
-      <!-- 페이지 3: 완료 -->
-      <div id="completeSection" class="page">
-        <h2>단축 완료</h2>
-        <div class="check-icon">
-          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="45" fill="none" stroke="#3663FF" stroke-width="4"/>
-            <path d="M 30 50 L 45 65 L 70 35" fill="none" stroke="#3663FF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
-              <animate attributeName="stroke-dasharray" from="0 100" to="100 100" dur="0.5s" fill="freeze"/>
-              <animate attributeName="stroke-dashoffset" from="100" to="0" dur="0.5s" fill="freeze"/>
-            </path>
-          </svg>
-        </div>
-        <p>단축이 완료되었습니다</p>
-        <div class="link-container">
-          <input id="linkDisplay" type="text" readonly>
-          <button id="copyBtn">복사</button>
-        </div>
-        <button class="shorten-button" id="openLinkBtn">링크 열기</button>
-        <button class="shorten-button" id="newShortenBtn">새로 단축</button>
-      </div>
-    </div>
-  </main>
+<div class="result" id="result">
+아직 생성되지 않음
+</div>
 
-  <!-- 공통 헤더 JavaScript -->
-  <script src="header.js"></script>
+<script>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
-    
-    const firebaseConfig = {
-      apiKey: "AIzaSyB8OHhR0Vjan_nNdCczb5e2bOuDBYYRiIg",
-      authDomain: "urlshare-718c1.firebaseapp.com",
-      databaseURL: "https://urlshare-718c1-default-rtdb.firebaseio.com",
-      projectId: "urlshare-718c1",
-      storageBucket: "urlshare-718c1.firebasestorage.app",
-      messagingSenderId: "666729308999",
-      appId: "1:666729308999:web:a7f6d363e88b1d5ed5a262",
-      measurementId: "G-VZH9BNQ3VR"
-    };
-    
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const path = window.location.pathname.slice(1);
-    
-    function generateCode(length = 6) {
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      let result = '';
-      for (let i = 0; i < length; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
-      return result;
-    }
+const API =
+  "https://d-log-api.alexeom97.workers.dev/api/posts";
 
-    // 페이지 전환 함수
-    function showPage(pageName) {
-      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-      document.getElementById(pageName + 'Section').classList.add('active');
-    }
-    
-    // 리다이렉트 처리
-    if (path) {
-      const dbRef = ref(db);
-      get(child(dbRef, `urls/${path}`))
-        .then(snapshot => {
-          if (snapshot.exists()) {
-            window.location.href = snapshot.val().original;
-          } else {
-            document.querySelector('main').innerHTML = `
-              <div class="container">
-                <h2>❌ 단축 링크를 찾을 수 없습니다.</h2>
-              </div>
-            `;
-          }
-        })
-        .catch(err => {
-          document.querySelector('main').innerHTML = `
-            <div class="container">
-              <h2>⚠️ 오류 발생: ${err.message}</h2>
-            </div>
-          `;
-        });
-    } else {
-      // 메인 페이지 로직
-      const input = document.getElementById("urlInput");
-      const btn = document.getElementById("shortenBtn");
-      const linkDisplay = document.getElementById("linkDisplay");
-      const copyBtn = document.getElementById("copyBtn");
-      const openLinkBtn = document.getElementById("openLinkBtn");
-      const newShortenBtn = document.getElementById("newShortenBtn");
-      
-      let currentShortUrl = '';
+async function createShortUrl() {
 
-      btn.addEventListener("click", async () => {
-        const longUrl = input.value.trim();
-        if (!longUrl.startsWith("http://") && !longUrl.startsWith("https://")) {
-          alert("URL은 반드시 http:// 또는 https:// 로 시작해야 합니다!");
-          return;
-        }
+  const url =
+    document.getElementById("url").value;
 
-        // 로딩 페이지로 전환
-        showPage('loading');
+  if (!url) {
+    alert("URL 입력");
+    return;
+  }
 
-        try {
-          const code = generateCode();
-          await set(ref(db, `urls/${code}`), { original: longUrl });
-          const shortUrl = `https://url.jbjb.r-e.kr/${code}`;
-          currentShortUrl = shortUrl;
-          
-          linkDisplay.value = shortUrl;
+  const res = await fetch(API, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Prefer": "return=representation"
+    },
+    body: JSON.stringify({
+      url
+    })
+  });
 
-          // 완료 페이지로 전환
-          showPage('complete');
-        } catch (error) {
-          alert('단축 실패: ' + error.message);
-          showPage('input');
-        }
-      });
+  const data = await res.json();
 
-      // 복사 버튼
-      copyBtn.addEventListener('click', () => {
-        navigator.clipboard.writeText(linkDisplay.value).then(() => {
-          const originalText = copyBtn.textContent;
-          copyBtn.textContent = "✔";
-          copyBtn.style.background = "#00cc88";
-          setTimeout(() => {
-            copyBtn.textContent = originalText;
-            copyBtn.style.background = "#3663FF";
-          }, 1500);
-        });
-      });
+  // Supabase return=representation 결과
+  const item = data[0];
 
-      // 링크 열기 버튼
-      openLinkBtn.addEventListener('click', () => {
-        window.open(currentShortUrl, '_blank');
-      });
+  const shortUrl =
+    `https://url.jbjb.r-e.kr/${item.id}`;
 
-      // 새로 단축 버튼
-      newShortenBtn.addEventListener('click', () => {
-        input.value = '';
-        linkDisplay.value = '';
-        currentShortUrl = '';
-        showPage('input');
-      });
-    }
-  </script>
+  document.getElementById("result").innerHTML = `
+    <p><b>원본 URL:</b></p>
+    <p>${item.url}</p>
+
+    <p style="margin-top:15px;">
+      <b>단축 URL:</b>
+    </p>
+
+    <a
+      href="${shortUrl}"
+      target="_blank"
+      style="color:skyblue;"
+    >
+      ${shortUrl}
+    </a>
+  `;
+}
+
+</script>
+
 </body>
 </html>
